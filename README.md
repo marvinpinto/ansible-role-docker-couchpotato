@@ -1,38 +1,79 @@
-Role Name
-=========
+docker-couchpotato
+==================
 
-A brief description of the role goes here.
+[![Build Status](https://img.shields.io/travis/marvinpinto/ansible-role-docker-couchpotato/master.svg?style=flat-square)](https://travis-ci.org/marvinpinto/ansible-role-docker-couchpotato)
+[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-docker--couchpotato-blue.svg?style=flat-square)](https://galaxy.ansible.com/marvinpinto/docker-couchpotato)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
+
+Ansible Galaxy role to manage and run a [couchpotato](https://couchpota.to)
+docker container.
+
+This role wires together the couchpotato [docker
+container](https://hub.docker.com/r/linuxserver/couchpotato) created by
+[linuxserver](https://github.com/linuxserver/docker-couchpotato), along with
+various boilerplate to get things going.
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role has been tested on Ubuntu 14.04 and will likely only work on an
+Ubuntu-like system. You will also need a functioning docker environment and a
+recent-is version of `docker-py` for this role to work.
+
+If you have neither and would like ansible to set this up for you, have a look
+at the [marvinpinto.docker](https://galaxy.ansible.com/marvinpinto/docker)
+Galaxy role.
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+# Docker container name
+docker_couchpotato_container_name: 'couchpotato'
 
-Dependencies
-------------
+# Couchpotato host port
+docker_couchpotato_exposed_port: '5050'
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+# Directory that will be used as the root of all couchpotato-related
+# configuration & data. Note that these sub-directories *will* be automatically
+# created if they don't already exist.
+#
+# So, assuming 'docker_couchpotato_mounted_directory' is set to:
+# /tmp/couchpotato_mount, the following directories will be created
+# automatically:
+#
+# /tmp/couchpotato_mount/config
+# /tmp/couchpotato_mount/raw_movie_downloads
+# /tmp/couchpotato_mount/movies
+docker_couchpotato_mounted_directory: '/tmp/couchpotato_mount'
+```
 
-Example Playbook
-----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Examples
+--------
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Install this module from Ansible Galaxy into the './roles' directory:
+```bash
+ansible-galaxy install marvinpinto.docker-couchpotato -p ./roles
+```
 
-License
--------
+Use it in a playbook as follows:
+```yaml
+- hosts: '127.0.0.1'
+  roles:
+    - role: 'marvinpinto.docker-couchpotato'
+      become: true
+```
 
-BSD
 
-Author Information
-------------------
+Mounted Directory
+-----------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+The reasoning behind storing all related configuration in the
+`docker_couchpotato_mounted_directory` root directory is because a person now
+has the ability to manage all the configuration + data outside of Ansible.
+
+This becomes especially useful when said mounted directory resides on a
+separate filesystem (EBS, USB disk, etc).
