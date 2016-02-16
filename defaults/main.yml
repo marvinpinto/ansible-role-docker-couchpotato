@@ -1,2 +1,19 @@
 ---
-# defaults file for docker-couchpotato
+# Docker container name
+docker_couchpotato_container_name: 'couchpotato'
+
+# Couchpotato host port
+docker_couchpotato_exposed_port: '5050'
+
+# Directory that will be used as the root of all couchpotato-related
+# configuration & data. Note that these sub-directories *will* be automatically
+# created if they don't already exist.
+#
+# So, assuming 'docker_couchpotato_mounted_directory' is set to:
+# /tmp/couchpotato_mount, the following directories will be created
+# automatically:
+#
+# /tmp/couchpotato_mount/config
+# /tmp/couchpotato_mount/raw_movie_downloads
+# /tmp/couchpotato_mount/movies
+docker_couchpotato_mounted_directory: '/tmp/couchpotato_mount'

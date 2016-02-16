@@ -1,2 +1,19 @@
 ---
-# tasks file for docker-couchpotato
+- name: 'Start the couchpotato docker container'
+  docker:
+    image: "linuxserver/couchpotato"
+    name: "{{ docker_couchpotato_container_name }}"
+    env:
+      PUID: '0'
+      PGID: '0'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '{{ docker_couchpotato_mounted_directory }}/config:/config'
+      - '{{ docker_couchpotato_mounted_directory }}/raw_movie_downloads:/downloads'
+      - '{{ docker_couchpotato_mounted_directory }}/movies:/movies'
+    ports: '{{ docker_couchpotato_exposed_port }}:5050'
+    state: 'started'
+    restart_policy: 'always'
+    log_driver: 'syslog'
+    log_opt:
+      syslog-tag: "{{ docker_couchpotato_container_name }}"
